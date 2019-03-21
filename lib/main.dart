@@ -46,7 +46,7 @@ class MyAppState extends State<MyApp> {
             title: Text("Ladder of upvoted girl"),
           ),
           body: StreamBuilder(
-            stream: Firestore.instance.collection("ladder").snapshots(),
+            stream: Firestore.instance.collection('ladder').snapshots(),
             builder: (context, snapshot) {
               print(snapshot);
               if (!snapshot.hasData) return const Center(

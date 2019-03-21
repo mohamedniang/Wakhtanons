@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "941920140646",
+    "firebase_url": "https://wakhtanons-2981a.firebaseio.com",
+    "project_id": "wakhtanons-2981a",
+    "storage_bucket": "wakhtanons-2981a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941920140646:android:49efbe2b5c87d94a",
+        "android_client_info": {
+          "package_name": "com.example.wakhtanons"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941920140646-lh4133r8sahi9jnalcup6atp0ec4ivoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsiYbY8BWQsjsXuu9CSWExGD-BC5xD30Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
