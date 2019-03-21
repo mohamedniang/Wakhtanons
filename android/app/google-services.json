@@ -38,6 +38,5 @@
       }
     }
   ],
-  "configuration_version": "1",
-  "apply plugin": "com.google.gms.google-services"
+  "configuration_version": "1"
 }
