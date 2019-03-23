@@ -17,9 +17,19 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  #tous les packages que j'ai ajouté
+  #debut
+  # firebase_auth: ^0.8.2
+  # google_sign_in: ^4.0.1+1
+  cloud_firestore:
+  # firebase_storage:
+  # fluttertoast: ^3.0.3
+  # shared_preferences:
+  # image_picker:
+  # cached_network_image: ^0.7.0
+  # intl: ^0.15.8
+  #fin
 
-  cloud_firestore: ^0.8.2
-    
   flutter:
     sdk: flutter
 
