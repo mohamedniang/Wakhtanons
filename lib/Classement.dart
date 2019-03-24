@@ -38,7 +38,7 @@ class _ClassementState extends State<Classement>
           Expanded(
             child: Text(
               document['nom'],
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(ctx).textTheme.headline,
             ),
           ),
           Container(
@@ -50,7 +50,7 @@ class _ClassementState extends State<Classement>
             padding: const EdgeInsets.all(15.0),
             child: Text(
               document['aime'].toString(),
-              style: Theme.of(context).textTheme.display1,
+              style: Theme.of(ctx).textTheme.display1,
             ),
           )
         ],

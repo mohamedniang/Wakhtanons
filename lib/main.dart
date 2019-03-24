@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import './classes/Msg.dart';
 import './Classement.dart';
@@ -33,13 +33,13 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController.dispose();
-    for(Msg message in _messages){
+    for (Msg message in _messages) {
       message.animationController.dispose();
     }
     super.dispose();
   }
 
-  Widget _buildComposer() {
+  Widget _buildComposer(DocumentReference doc) {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).accentColor),
       child: Container(
@@ -56,7 +56,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
                     _isWritting = txt.length > 0;
                   });
                 },
-                onSubmitted: _submitMessage,
+                // onSubmitted: _submitMessage,
                 decoration: InputDecoration.collapsed(
                   hintText: "Entrez votre message ici",
                 ),
@@ -73,9 +73,8 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
                   onPressed: () {
                     if (_isWritting) {
                       print(_textController.text);
-                      return _submitMessage(_textController.text);
-                    }
-                    else {
+                      return _submitMessage(_textController.text, doc);
+                    } else {
                       return null;
                     }
                   },
@@ -85,27 +84,32 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
       ),
     );
   }
-  
-  void _submitMessage(String txt) {
+
+  void _submitMessage(String txt, DocumentReference document) {
     _textController.clear();
     setState(() {
       _isWritting = false;
     });
-    Msg message = new Msg(
-      txt:txt,
-      animationController: AnimationController(
-        vsync: this,
-        duration: Duration(
-          milliseconds: 800,
-        ),
-      ),
-    );
+    // Msg message = new Msg(
+    //   txt: txt,
+    //   animationController: AnimationController(
+    //     vsync: this,
+    //     duration: Duration(
+    //       milliseconds: 800,
+    //     ),
+    //   ),
+    // );
     setState(() {
-     _messages.insert(0,message); 
+      // _messages.insert(0, message);
+      Firestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot nouveauSnap =
+            await transaction.get(document);
+        await transaction.set(document, {'txt':txt});
+      });
+      // document.setData({'txt': txt});
     });
-    message.animationController.forward();
+    // message.animationController.forward();
   }
-  
 
   //Construction de la page (assemblage des differents widget crée)
 
@@ -141,20 +145,47 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
                     ),
                   ),
                   Flexible(
-                    child: ListView.builder(
-                      itemBuilder: (_, int index) {
-                        return _messages[index];
-                      },
-                      itemCount: _messages.length,
-                      reverse: true,
-                      padding: EdgeInsets.all(6.0),
-                    ),
+                    child: StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('messages')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          var res = snapshot.data
+                              .documents; // variable qui vas contenir la table "message"
+                          // print("taille = " + res.length.toString());
+                          if (!snapshot.hasData)
+                            return const Center(
+                                child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.red),
+                            ));
+                          return ListView.builder(
+                            reverse: true,
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.all(10.0),
+                            itemExtent: 80.0,
+                            itemCount: res.length,
+                            itemBuilder: (context, index) {
+                              return Msg(
+                                txt: res[index]['txt'],
+                                animationController: AnimationController(
+                                  vsync: this,
+                                  duration: Duration(
+                                    milliseconds: 800,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }),
                   ),
                   Divider(
                     height: 1.0,
+                    color: Colors.blue[300],
                   ),
                   Container(
-                    child: _buildComposer(),
+                    child: _buildComposer(
+                        Firestore.instance.collection('messages').document()),
                   ),
                 ],
               ),

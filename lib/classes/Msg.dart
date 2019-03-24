@@ -13,37 +13,44 @@ class Msg extends StatelessWidget {
       ),
       axisAlignment: 0.0,
       child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blueAccent[100],
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+        padding: EdgeInsets.all(5.0),
         margin: EdgeInsets.symmetric(
-          vertical: 8.0,
+          vertical: 5.0,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                left: 165.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("Souhaibou",
-                  style: Theme.of(context).textTheme.subhead,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 0.0,
+            Expanded(
+              child: Container(
+                // decoration: BoxDecoration(
+                //   border: Border.all()
+                // ),
+                // margin: EdgeInsets.all(
+                //   1.0,
+                // ),
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Souhaibou",
+                      style: Theme.of(context).textTheme.headline,
                     ),
-                    child: Text(txt),
-                  ),
-                ],
-
+                    Container(
+                      // margin: EdgeInsets.only(
+                      //   top: 0.0,
+                      // ),
+                      child: Text(txt),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Expanded(
-              child:CircleAvatar(
-                child: Text("S"),
-              ), 
-
+            CircleAvatar(
+              child: Text("S"),
             ),
           ],
         ),
