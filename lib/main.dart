@@ -3,12 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import './classes/Msg.dart';
 import './Classement.dart';
+import './Intro.dart';
 
 // Cecie est juste un teste pour voir est-ce que les changement s'applique sur la branche principale
 // git add *
 // git push -u master
 
-void main() => runApp(MyApp());
+void main() => runApp(Intro());
 
 class MyApp extends StatefulWidget {
   @override
@@ -87,6 +88,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
 
   void _submitMessage(String txt, DocumentReference document) {
     _textController.clear();
+    print(DateTime.now().millisecondsSinceEpoch.toString());
     setState(() {
       _isWritting = false;
     });
@@ -102,9 +104,8 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
     setState(() {
       // _messages.insert(0, message);
       Firestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot nouveauSnap =
-            await transaction.get(document);
-        await transaction.set(document, {'txt':txt});
+        await transaction.set(document,
+            {'txt': txt, 'timestamp': DateTime.now().millisecondsSinceEpoch});
       });
       // document.setData({'txt': txt});
     });
@@ -119,7 +120,23 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
       title: "Wakhtanons",
       home: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             title: Text("Wakhtanons"),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: null,
+              ),
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: null,
+              ),
+            ],
             bottom: TabBar(
               controller: _tabController,
               tabs: <Tab>[
@@ -148,6 +165,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
                     child: StreamBuilder(
                         stream: Firestore.instance
                             .collection('messages')
+                            .orderBy('timestamp', descending: true)
                             .snapshots(),
                         builder: (context, snapshot) {
                           var res = snapshot.data
