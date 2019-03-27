@@ -20,31 +20,33 @@ class ConnectionScreen extends StatelessWidget {
   final TextEditingController _textControllerPseudo = TextEditingController();
   final TextEditingController _textControllerPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final conxKey = GlobalKey<FormState>();
+
+  String _username, _password;
+
 
   void _seConnecter(BuildContext ctx) async {
-    String entryPseudo = _textControllerPseudo.text;
-    String entryPassword = _textControllerPassword.text;
-    if (entryPassword == '' || entryPseudo == '') {
+    if (!conxKey.currentState.validate()) {
       _noInputAlert(ctx);
       return;
     }
-    print(_textControllerPseudo.text);
-    print(_textControllerPassword.text);
+    conxKey.currentState.save();
     _textControllerPseudo.clear();
     _textControllerPassword.clear();
     final QuerySnapshot result = await Firestore.instance
         .collection('utilisateurs')
-        .where('pseudo', isEqualTo: entryPseudo)
-        .where('motdepasse', isEqualTo: entryPassword)
+        .where('pseudo', isEqualTo: _username)
+        .where('motdepasse', isEqualTo: _password)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     print(documents.length);
     if (documents.length == 0) {
+      
     } else {
       Navigator.push(
           ctx,
           MaterialPageRoute(
-            builder: (context) => MyApp(),
+            builder: (context) => MyApp(documents[0]),
           ));
     }
   }
@@ -96,7 +98,6 @@ class ConnectionScreen extends StatelessWidget {
                       onSaved: (input) => _pseudo = input,
                     ),
                     TextFormField(
-                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelText: 'Mot de passe',
                       ),
@@ -161,44 +162,51 @@ class ConnectionScreen extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.all(15.0),
             height: 250.0,
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(labelText: 'Nom D\'utilisateur'),
-                  controller: _textControllerPseudo,
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Mot De Passe'),
-                  controller: _textControllerPassword,
-                ),
-                RaisedButton(
-                  child: Text(
-                    'Se Connecter',
-                    style: TextStyle(color: Colors.white),
+            child: Form(
+              key: conxKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Nom D\'utilisateur'),
+                    controller: _textControllerPseudo,
+                    validator: (input) => input == '' ? 'Veiller saisir votre pseudo' : null,
+                    onSaved: (input) => _username = input,
                   ),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () => _seConnecter(context),
-                ),
-                Container(
-                  child: Row(
-                    children: <Widget>[
-                      Text('Toujours pas de compte ?'),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _signInDialog(context),
-                          child: Text(
-                            'Incrivez-vous.',
-                            style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 22.0),
-                            textAlign: TextAlign.center,
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Mot De Passe'),
+                    controller: _textControllerPassword,
+                    validator: (input) => input == '' ? 'Veiller saisir votre mot de passe' : null,
+                    onSaved: (input) => _password = input,
+                  ),
+                  RaisedButton(
+                    child: Text(
+                      'Se Connecter',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Theme.of(context).accentColor,
+                    onPressed: () => _seConnecter(context),
+                  ),
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text('Toujours pas de compte ?'),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _signInDialog(context),
+                            child: Text(
+                              'Incrivez-vous.',
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontSize: 22.0),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
