@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wakhtanons/classes/UserCard.dart';
 
 class UsersList extends StatefulWidget {
+  final DocumentSnapshot user;
+  UsersList(this.user);
   @override
   State<StatefulWidget> createState() {
     return _UserListState();
@@ -29,7 +31,7 @@ class _UserListState extends State<UsersList>
             itemExtent: 80.0,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) =>
-                UserCard(snapshot.data.documents[index]),
+                UserCard(snapshot.data.documents[index], widget.user),
           );
         },
       ),

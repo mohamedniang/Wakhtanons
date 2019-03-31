@@ -4,6 +4,8 @@ import 'package:wakhtanons/classes/BuildComposer.dart';
 import 'package:wakhtanons/classes/Msg.dart';
 
 class GlobalMessages extends StatefulWidget {
+  GlobalMessages(this.userinfos);
+  DocumentSnapshot userinfos;
   @override
   _GlobalMessagesState createState() => _GlobalMessagesState();
 }
@@ -40,6 +42,7 @@ class _GlobalMessagesState extends State<GlobalMessages>
                       itemBuilder: (context, index) {
                         return Msg(
                           txt: res[index]['txt'],
+                          sender: res[index]['from'] ?? 'unknown',
                           animationController: AnimationController(
                             vsync: this,
                             duration: Duration(
@@ -58,7 +61,10 @@ class _GlobalMessagesState extends State<GlobalMessages>
           ),
           Container(
             child: BuildComposer(
-                Firestore.instance.collection('messages').document()),
+                doc: Firestore.instance.collection('messages').document(),
+                type: 1,
+                from: widget.userinfos
+                ),
           ),
         ],
       ),

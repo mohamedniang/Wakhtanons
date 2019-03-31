@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:wakhtanons/GlobalMessages.dart';
 import 'package:wakhtanons/UsersList.dart';
+import 'package:wakhtanons/setting.dart';
 import './Classement.dart';
 import './Intro.dart';
 
@@ -92,13 +93,17 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
             ),
             title: Text("Wakhtanons"),
             actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: null,
-              ),
+              // IconButton(
+              //   icon: Icon(Icons.refresh),
+              //   onPressed: null,
+              // ),
               IconButton(
                 icon: Icon(Icons.settings),
-                onPressed: null,
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Settings(widget.userinfos),
+                  ));
+                },
               ),
             ],
             bottom: TabBar(
@@ -109,8 +114,8 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
           body: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              UsersList(),
-              GlobalMessages(),
+              UsersList(widget.userinfos),
+              GlobalMessages(widget.userinfos),
               Classement(),
             ],
           )),

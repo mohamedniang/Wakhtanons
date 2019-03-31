@@ -177,6 +177,7 @@ class ConnectionScreen extends StatelessWidget {
                     controller: _textControllerPassword,
                     validator: (input) => input == '' ? 'Veiller saisir votre mot de passe' : null,
                     onSaved: (input) => _password = input,
+                    obscureText: true,
                   ),
                   RaisedButton(
                     child: Text(

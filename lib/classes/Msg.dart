@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Msg extends StatelessWidget {
-  Msg({this.txt, this.animationController});
+
+  Msg({this.txt, this.animationController, this.sender});
+  final String sender;
   final String txt;
   final AnimationController animationController;
   @override
@@ -36,7 +38,7 @@ class Msg extends StatelessWidget {
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Souhaibou",
+                      "${this.sender}",
                       style: Theme.of(context).textTheme.headline,
                     ),
                     Container(
@@ -50,7 +52,7 @@ class Msg extends StatelessWidget {
               ),
             ),
             CircleAvatar(
-              child: Text("S"),
+              child: Text("${this.sender[0]}"),
             ),
           ],
         ),
