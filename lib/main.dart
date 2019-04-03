@@ -86,7 +86,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
       home: Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.exit_to_app),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -116,7 +116,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
             children: <Widget>[
               UsersList(widget.userinfos),
               GlobalMessages(widget.userinfos),
-              Classement(),
+              Classement(widget.userinfos),
             ],
           )),
     );

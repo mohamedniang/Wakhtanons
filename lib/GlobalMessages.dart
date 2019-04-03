@@ -22,6 +22,7 @@ class _GlobalMessagesState extends State<GlobalMessages>
                 stream: Firestore.instance
                     .collection('messages')
                     .orderBy('timestamp', descending: true)
+                    .limit(20)
                     .snapshots(),
                 builder: (context, snapshot) {
                   // print("taille = " + res.length.toString());
@@ -37,10 +38,12 @@ class _GlobalMessagesState extends State<GlobalMessages>
                       reverse: true,
                       scrollDirection: Axis.vertical,
                       padding: EdgeInsets.all(10.0),
-                      itemExtent: 80.0,
+                      // itemExtent: 80.0,
                       itemCount: res.length,
                       itemBuilder: (context, index) {
                         return Msg(
+                          isRight: widget.userinfos.data['pseudo'] ==
+                              res[index]['from'],
                           txt: res[index]['txt'],
                           sender: res[index]['from'] ?? 'unknown',
                           animationController: AnimationController(
@@ -63,8 +66,7 @@ class _GlobalMessagesState extends State<GlobalMessages>
             child: BuildComposer(
                 doc: Firestore.instance.collection('messages').document(),
                 type: 1,
-                from: widget.userinfos
-                ),
+                from: widget.userinfos),
           ),
         ],
       ),

@@ -16,14 +16,21 @@ class Intro extends StatelessWidget {
   }
 }
 
-class ConnectionScreen extends StatelessWidget {
+class ConnectionScreen extends StatefulWidget {
+  @override
+  _ConnectionScreenState createState() => _ConnectionScreenState();
+}
+
+class _ConnectionScreenState extends State<ConnectionScreen> {
   final TextEditingController _textControllerPseudo = TextEditingController();
+
   final TextEditingController _textControllerPassword = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
+
   final conxKey = GlobalKey<FormState>();
 
   String _username, _password;
-
 
   void _seConnecter(BuildContext ctx) async {
     if (!conxKey.currentState.validate()) {

@@ -22,7 +22,7 @@ dependencies:
   # firebase_auth: ^0.8.2
   # google_sign_in: ^4.0.1+1
   cloud_firestore:
-  # firebase_storage:
+  firebase_storage:
   # fluttertoast: ^3.0.3
   # shared_preferences:
   # image_picker:

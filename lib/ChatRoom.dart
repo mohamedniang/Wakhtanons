@@ -61,10 +61,12 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
                         reverse: true,
                         scrollDirection: Axis.vertical,
                         padding: EdgeInsets.all(10.0),
-                        itemExtent: 80.0,
+                        // itemExtent: 300.0,
                         itemCount: res.length,
                         itemBuilder: (context, index) {
                           return Msg(
+                            isRight: widget.userEm.data['pseudo'] ==
+                                res[index]['from'],
                             txt: res[index]['content'],
                             sender: '${res[index]['from']}',
                             animationController: AnimationController(

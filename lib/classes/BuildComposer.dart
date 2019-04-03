@@ -57,6 +57,7 @@ class _BuildComposerState extends State<BuildComposer> {
           children: <Widget>[
             Flexible(
               child: TextField(
+                maxLines: 2,
                 controller: _textController,
                 onChanged: (String txt) {
                   setState(() {
