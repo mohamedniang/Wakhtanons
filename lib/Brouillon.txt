@@ -1,0 +1,130 @@
+Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                "${this.sender}",
+                style: Theme.of(context).textTheme.headline,
+              ),
+              Container(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: 0.0,
+                  ),
+                  child: Text(
+                    txt,
+                    // overflow: TextOverflow.ellipsis,
+                    // softWrap: false,
+                    // textAlign: TextAlign.start,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+ListBody(
+      mainAxis: Axis.horizontal,
+      // crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          // padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+          // decoration: BoxDecoration(
+          //     color: Colors.blue[100],
+          //     borderRadius: BorderRadius.circular(8.0)),
+          // margin: EdgeInsets.all(5.0),
+          child: ListBody(
+            mainAxis: Axis.vertical,
+            children: <Widget>[
+              const Text('message:'),
+              Text(txt),
+            ],
+          ),
+        ),
+        // Padding(
+        //   padding: EdgeInsets.all(5.0),
+        // ),
+        CircleAvatar(
+          child: Text('${this.sender[0].toUpperCase()}'),
+        )
+      ],
+    )
+
+SizeTransition(
+      sizeFactor: CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeIn,
+      ),
+      // axisAlignment: 0.0,
+      // child: Container(
+      //   decoration: BoxDecoration(
+      //     color: Colors.blueAccent[100],
+      //     borderRadius: BorderRadius.circular(25.0),
+      //   ),
+      //   padding: EdgeInsets.all(5.0),
+      //   margin: EdgeInsets.symmetric(
+      //     vertical: 5.0,
+      //   ),
+      child: isRight ? _msgRight(context) : _msgLeft(context),
+      //),
+    )
+
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        CircleAvatar(
+          child: Text('${this.sender[0].toUpperCase()}'),
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+          width: 200.0,
+          height: 500.0,
+          decoration: BoxDecoration(
+              color: Colors.blue[100],
+              borderRadius: BorderRadius.circular(8.0)),
+          margin: EdgeInsets.all(5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                "${this.sender}",
+                style: Theme.of(context).textTheme.headline,
+              ),
+              Container(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: 0.0,
+                  ),
+                  child: Text(
+                    txt,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Padding(
+        //   padding: EdgeInsets.all(5.0),
+        // ),
+      ],
+    )
+
+Container(
+      child: ListView.builder(
+        itemExtent: 80.0,
+        itemCount: widget.user.data.length,
+        itemBuilder: (context, index) => Card(
+                child: Center(
+              child: Row(
+                children: <Widget>[
+                  Text('${widget.user.data.keys.toList()[index]} : ',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                  ),
+                  Text('${widget.user.data.values.toList()[index]}'),
+                ],
+              ),
+            )),
+      ),
+    )

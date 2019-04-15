@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:wakhtanons/classes/BuildComposer.dart';
 import 'package:wakhtanons/classes/Msg.dart';
 
+String chatRoomID;
 class ChatRoom extends StatefulWidget {
   final DocumentSnapshot userEm;
   final DocumentSnapshot userRc;
-  String chatRoomID;
   ChatRoom({this.userEm, this.userRc}) {
     // e4t1C3J5htYdnYAM9pw8--LavF-aaWE2mdKNs8JhX
     // -LavF-aaWE2mdKNs8JhX-e4t1C3J5htYdnYAM9pw8
-    this.chatRoomID = userEm.documentID.hashCode >= userRc.documentID.hashCode
+    chatRoomID = userEm.documentID.hashCode >= userRc.documentID.hashCode
         ? userEm.documentID + '-' + userRc.documentID
         : userRc.documentID + '-' + userEm.documentID;
   }
   @override
-  _ChatRoomState createState() => _ChatRoomState(this.chatRoomID);
+  _ChatRoomState createState() => _ChatRoomState(chatRoomID);
 }
 
 class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
@@ -26,9 +26,9 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    print(roomID);
-    print("userEm:" + widget.userEm.documentID.hashCode.toString());
-    print("userRc:" + widget.userRc.documentID.hashCode.toString());
+    print("roomID: " + roomID);
+    print("userEm: " + widget.userEm.documentID.hashCode.toString());
+    print("userRc: " + widget.userRc.documentID.hashCode.toString());
   }
 
   @override

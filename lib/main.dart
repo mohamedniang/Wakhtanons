@@ -25,9 +25,6 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> with TickerProviderStateMixin {
   // déclaration des variables
-  MyAppState(){
-    _greeting(context);
-  }
   TabController _tabController;
   List<Tab> _myTabs = <Tab>[
     Tab(
@@ -44,6 +41,8 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
     ),
   ];
 
+
+
   @override
   void initState() {
     super.initState();
@@ -54,27 +53,6 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  Future<void> _greeting(BuildContext ctx) async {
-    return showDialog<void>(
-      context: ctx,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Bienvenue'),
-          content: Text('Content de vous voir ${widget.userinfos['pseudo']}'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Continuer'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   //Construction de la page (assemblage des differents widget crée)
@@ -99,10 +77,12 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
               // ),
               IconButton(
                 icon: Icon(Icons.settings),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => Settings(widget.userinfos),
-                  ));
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Settings(widget.userinfos),
+                      ));
                 },
               ),
             ],

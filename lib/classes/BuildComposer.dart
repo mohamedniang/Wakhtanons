@@ -18,13 +18,14 @@ class _BuildComposerState extends State<BuildComposer> {
   bool _isWritting = false;
 
   void _submitMessage(String txt, DocumentReference document) {
+    print('_submitmessage called');
     _textController.clear();
+    _textController.clearComposing();
     setState(() {
+      print('Inside set state () ');
       _isWritting = false;
-    });
-
-    setState(() {
       if (widget.type == 0) {
+        print('message type 0 ');
         Firestore.instance.runTransaction((transaction) async {
           await transaction.set(document, {
             'content': txt,
@@ -33,16 +34,18 @@ class _BuildComposerState extends State<BuildComposer> {
           });
         });
       } else if (widget.type == 1) {
+        print('message type 1 ');
         Firestore.instance.runTransaction((transaction) async {
-          await transaction.set(document,
-              {
-                'txt': txt, 
-                'timestamp': DateTime.now().millisecondsSinceEpoch,
-                'from': widget.from.data['pseudo'].toString()
-                });
+          await transaction.set(document, {
+            'txt': txt,
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+            'from': widget.from.data['pseudo'].toString()
+          });
         });
       }
+      print('last line set state () ');
     });
+    print('out side set state () ');
   }
 
   @override
@@ -81,7 +84,6 @@ class _BuildComposerState extends State<BuildComposer> {
                   ),
                   onPressed: () {
                     if (_isWritting) {
-                      print(_textController.text);
                       return _submitMessage(_textController.text, widget.doc);
                     } else {
                       return null;

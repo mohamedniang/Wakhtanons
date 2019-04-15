@@ -18,31 +18,24 @@ class _UserListState extends State<UsersList>
     return Container(
       margin: EdgeInsets.all(10.0),
       child: StreamBuilder(
-        stream: Firestore.instance
-        .collection('utilisateurs')
-        .snapshots(),
+        stream: Firestore.instance.collection('utilisateurs').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
             return const Center(
                 child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.pink),
             ));
           return ListView.builder(
             itemExtent: 80.0,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) =>
-                UserCard(snapshot.data.documents[index], widget.user),
+                (snapshot.data.documents[index]['pseudo'] != "null" &&
+                        snapshot.data.documents[index]['pseudo'] != widget.user.data['pseudo'])
+                    ? UserCard(snapshot.data.documents[index], widget.user)
+                    : null,
           );
         },
       ),
     );
   }
 }
-
-// child: ListView.builder(
-//         itemExtent: 80.0,
-//         itemCount: response.documents.length,
-//         itemBuilder: (context, index) => Card(
-//               child: Text("data"),
-//             ),
-//       ),

@@ -1,9 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 
 class Classement extends StatefulWidget {
-  DocumentSnapshot currentUser;
+  final DocumentSnapshot currentUser;
   Classement(this.currentUser);
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +18,15 @@ class Classement extends StatefulWidget {
 
 class _ClassementState extends State<Classement>
     with SingleTickerProviderStateMixin {
-  @override
+  List<String> filesNames = <String>[
+    'profilPhotos/Girl1.jpg',
+    'profilPhotos/Girl2.jpg',
+    'profilPhotos/Girl3.jpg',
+  ];
+
+  String _path;
+  File cachedFile;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -28,62 +41,94 @@ class _ClassementState extends State<Classement>
           // itemExtent: 80.0,
           itemCount: snapshot.data.documents.length,
           itemBuilder: (context, index) =>
-              _buildCandidat(context, snapshot.data.documents[index]),
+              _buildCandidat(context, snapshot.data.documents[index], index),
         );
       },
     );
   }
 
-  Widget _buildCandidat(BuildContext ctx, DocumentSnapshot document) {
+  Widget _buildCandidat(
+      BuildContext ctx, DocumentSnapshot document, int index) {
     return Container(
-      child: Column(
-        children: <Widget>[
-          Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/wakhtanons-2981a.appspot.com/o/IMG_2844.JPG?alt=media&token=88cfb6d8-38a0-480e-b9e4-572cb355ffa8',
-            height: 150.0,
-            width: 150.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        width: 350.0,
+        child: GestureDetector(
+          onTap: () => _uploadFile(filesNames[index]),
+          child: Column(
             children: <Widget>[
-              RaisedButton.icon(
-                icon: Icon(Icons.thumb_up),
-                label: Text("${document.data['like']}"),
-                onPressed: () => _liked(document),
+              Image.asset(
+                filesNames[index],
+                fit: BoxFit.scaleDown,
               ),
-              RaisedButton.icon(
-                icon: Icon(Icons.thumb_down),
-                label: Text("${document.data['dislike']}"),
-                onPressed: () => _disliked(document),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton.icon(
+                    icon: Icon(Icons.thumb_up),
+                    label: Text("${document.data['like']}"),
+                    onPressed: () => _liked(document),
+                  ),
+                  RaisedButton.icon(
+                    icon: Icon(Icons.thumb_down),
+                    label: Text("${document.data['dislike']}"),
+                    onPressed: () => _disliked(document),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
-  _liked(DocumentSnapshot document) async {
-    var res = await Firestore.instance.collection('ladder').document('alreadyVoted');
-    if(res != null){
-      print(res.path);
-    }else{
-      print("nothing");
 
+  _liked(DocumentSnapshot document) async {
+    var res = Firestore.instance.collection('ladder').document('alreadyVoted');
+    if (res != null) {
+      print(res.path);
+    } else {
+      print("nothing");
     }
     Firestore.instance.runTransaction((transaction) async {
-          DocumentSnapshot nouveauSnap =
-              await transaction.get(document.reference);
-          await transaction
-              .update(nouveauSnap.reference, {'like': nouveauSnap['like'] + 1});
-        });
+      DocumentSnapshot nouveauSnap = await transaction.get(document.reference);
+      await transaction
+          .update(nouveauSnap.reference, {'like': nouveauSnap['like'] + 1});
+    });
   }
+
   _disliked(DocumentSnapshot document) {
     Firestore.instance.runTransaction((transaction) async {
-          DocumentSnapshot nouveauSnap =
-              await transaction.get(document.reference);
-          await transaction
-              .update(nouveauSnap.reference, {'dislike': nouveauSnap['dislike'] + 1});
-        });
+      DocumentSnapshot nouveauSnap = await transaction.get(document.reference);
+      await transaction.update(
+          nouveauSnap.reference, {'dislike': nouveauSnap['dislike'] + 1});
+    });
+  }
+
+  Future<Null> _uploadFile(String filepath) async {
+    final ByteData bytes = await rootBundle.load(filepath);
+    final Directory tempDir = Directory.systemTemp;
+    final String fileName = "${Random().nextInt(10000)}.jpg";
+    final File file = File('${tempDir.path}/$fileName');
+    file.writeAsBytes(bytes.buffer.asInt8List(), mode: FileMode.write);
+
+    final StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    final StorageUploadTask task = ref.putFile(file);
+    final Uri downloadUrl = (await task.onComplete).uploadSessionUri;
+    _path = downloadUrl.toString();
+
+    print(_path);
+  }
+
+  Future<Null> downloadFile(String httpPath) async {
+    final RegExp regExp = RegExp('([^?/]*\.(jpg))');
+    final String fileName = regExp.stringMatch(httpPath);
+    final Directory tempDir = Directory.systemTemp;
+    final File file = File('${tempDir.path}/$fileName');
+
+    final StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    final StorageFileDownloadTask downloadTask = ref.writeToFile(file);
+
+    final int byteNumber = (await downloadTask.future).totalByteCount;
+
+    print(byteNumber);
+
+    setState(() => cachedFile = file);
   }
 }
-

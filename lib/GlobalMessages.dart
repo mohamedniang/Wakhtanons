@@ -5,7 +5,7 @@ import 'package:wakhtanons/classes/Msg.dart';
 
 class GlobalMessages extends StatefulWidget {
   GlobalMessages(this.userinfos);
-  DocumentSnapshot userinfos;
+  final DocumentSnapshot userinfos;
   @override
   _GlobalMessagesState createState() => _GlobalMessagesState();
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import './main.dart';
 
@@ -32,9 +33,24 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
 
   String _username, _password;
 
+  bool _isVisible = false;
+
+  FocusNode _leFocus;
+
+  // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  // AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  // print('Running on ${androidInfo.model}');
+
   void _seConnecter(BuildContext ctx) async {
+    setState(() {
+      _isVisible = true;
+      FocusScope.of(ctx).detach();
+    });
     if (!conxKey.currentState.validate()) {
       _noInputAlert(ctx);
+      setState(() {
+        _isVisible = false;
+      });
       return;
     }
     conxKey.currentState.save();
@@ -48,7 +64,17 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
     final List<DocumentSnapshot> documents = result.documents;
     print(documents.length);
     if (documents.length == 0) {
-      
+      setState(() {
+        _isVisible = false;
+      });
+      Fluttertoast.showToast(
+          msg: "Pseudo et/ou mot de pass incorrect",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 15.0);
     } else {
       Navigator.push(
           ctx,
@@ -56,6 +82,9 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
             builder: (context) => MyApp(documents[0]),
           ));
     }
+    setState(() {
+      _isVisible = false;
+    });
   }
 
   Future<void> _noInputAlert(BuildContext ctx) async {
@@ -174,25 +203,47 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Nom D\'utilisateur'),
+                    decoration:
+                        InputDecoration(labelText: 'Nom D\'utilisateur'),
                     controller: _textControllerPseudo,
-                    validator: (input) => input == '' ? 'Veiller saisir votre pseudo' : null,
+                    validator: (input) =>
+                        input == '' ? 'Veiller saisir votre pseudo' : null,
                     onSaved: (input) => _username = input,
+                     focusNode: _leFocus,
                   ),
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Mot De Passe'),
                     controller: _textControllerPassword,
-                    validator: (input) => input == '' ? 'Veiller saisir votre mot de passe' : null,
+                    validator: (input) => input == ''
+                        ? 'Veiller saisir votre mot de passe'
+                        : null,
                     onSaved: (input) => _password = input,
                     obscureText: true,
+                    focusNode: _leFocus,
                   ),
-                  RaisedButton(
-                    child: Text(
-                      'Se Connecter',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () => _seConnecter(context),
+                  Stack(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Se Connecter',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Theme.of(context).accentColor,
+                        onPressed:
+                            !_isVisible ? () => _seConnecter(context) : null,
+                      ),
+                      Positioned(
+                        left: 40.0,
+                        child: Visibility(
+                          visible: _isVisible,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.red),
+                            // backgroundColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     child: Row(
