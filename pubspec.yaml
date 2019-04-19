@@ -19,19 +19,22 @@ environment:
 dependencies:
   #tous les packages que j'ai ajouté
   #debut
+  flutter_local_notifications: ^0.6.1
   # firebase_auth: ^0.8.2
   # google_sign_in: ^4.0.1+1
   cloud_firestore:
 
   firebase_storage:
 
-  image_picker: ^0.4.12
+  # image_picker: ^0.4.12
 
   fluttertoast: ^3.0.3
 
   # shared_preferences:
   # cached_network_image: ^0.7.0
   # intl: ^0.15.8
+
+  
   #fin
 
   flutter:

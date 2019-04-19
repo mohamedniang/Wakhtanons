@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatefulWidget {
@@ -19,45 +19,45 @@ class _SettingsState extends State<Settings> {
   final _formKey = GlobalKey();
   File _image;
 
-  String _path;
+  // String _path;
 
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     new FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    // var initializationSettingsAndroid =
-    //     new AndroidInitializationSettings('app_icon');
-    // var initializationSettingsIOS = new IOSInitializationSettings();
-    // var initializationSettings = new InitializationSettings(
-    //     initializationSettingsAndroid, initializationSettingsIOS);
-    // flutterLocalNotificationsPlugin.initialize(initializationSettings,
-    //     onSelectNotification: onSelectNotification);
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
   }
 
   Future<void> _getImage() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    print("Path of image = " + image.path);
+    // File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    // print("Path of image = " + image.path);
 
-    // uploading
-    final ByteData bytes = await rootBundle.load(image.path);
-    final Directory tempDir = Directory.systemTemp;
-    final String fileName = "${Random().nextInt(10000)}.jpg";
-    final File file = File('${tempDir.path}/$fileName');
-    file.writeAsBytes(bytes.buffer.asInt8List(), mode: FileMode.write);
+    // // uploading
+    // final ByteData bytes = await rootBundle.load(image.path);
+    // final Directory tempDir = Directory.systemTemp;
+    // final String fileName = "${Random().nextInt(10000)}.jpg";
+    // final File file = File('${tempDir.path}/$fileName');
+    // file.writeAsBytes(bytes.buffer.asInt8List(), mode: FileMode.write);
 
-    final StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
-    final StorageUploadTask task = ref.putFile(file);
-    final Uri downloadUrl = (await task.onComplete).uploadSessionUri;
-    _path = downloadUrl.toString();
+    // final StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    // final StorageUploadTask task = ref.putFile(file);
+    // final Uri downloadUrl = (await task.onComplete).uploadSessionUri;
+    // _path = downloadUrl.toString();
 
-    print("storage path = " + _path);
+    // print("storage path = " + _path);
 
-    setState(() {
-      _image = image;
-    });
+    // setState(() {
+    //   _image = image;
+    // });
   }
 
   Widget _input({IconData ico, String hintText, String oldValue}) {
@@ -144,17 +144,17 @@ class _SettingsState extends State<Settings> {
                   RaisedButton(
                     child: Text('test'),
                     onPressed: () async {
-                      // AndroidNotificationDetails and =
-                      //     AndroidNotificationDetails('your channel id',
-                      //         'your channel name', 'your channel description',
-                      //         importance: Importance.Max,
-                      //         priority: Priority.High);
-                      // var ios = new IOSNotificationDetails();
-                      // var platformChannelSpecifics =
-                      //     new NotificationDetails(and, ios);
-                      // await flutterLocalNotificationsPlugin.show(0,
-                      //     'plain title', 'plain body', platformChannelSpecifics,
-                      //     payload: 'item id 2');
+                      AndroidNotificationDetails and =
+                          AndroidNotificationDetails('your channel id',
+                              'your channel name', 'your channel description',
+                              importance: Importance.Max,
+                              priority: Priority.High);
+                      var ios = new IOSNotificationDetails();
+                      var platformChannelSpecifics =
+                          new NotificationDetails(and, ios);
+                      await flutterLocalNotificationsPlugin.show(0,
+                          'plain title', 'plain body', platformChannelSpecifics,
+                          payload: 'item id 2');
 
                       //
 
